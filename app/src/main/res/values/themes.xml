@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <style name="Theme.Meal" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.Meal.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/main_red</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_transparent</item>
+        <item name="postSplashScreenTheme">@style/Theme.Meal</item>
+    </style>
 </resources>
