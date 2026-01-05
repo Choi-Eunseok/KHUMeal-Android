@@ -98,6 +98,9 @@ dependencies {
 
     // Splash Screen
     implementation("androidx.core:core-splashscreen:1.0.1")
+
+    // haze
+    implementation("dev.chrisbanes.haze:haze:0.7.3")
 }
 
 hilt {

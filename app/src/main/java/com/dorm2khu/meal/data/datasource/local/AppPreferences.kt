@@ -3,6 +3,7 @@ package com.dorm2khu.meal.data.datasource.local
 import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
+import com.dorm2khu.meal.data.model.Restaurant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -21,8 +22,15 @@ class AppPreferences(
     val userIdFlow: Flow<String?> =
         ds.data.map { it[PreferencesKeys.USER_ID] }
 
-    val selectedRestaurantIdFlow: Flow<String?> =
-        ds.data.map { it[PreferencesKeys.SELECTED_RESTAURANT_ID] }
+    val selectedRestaurantFlow = ds.data.map { prefs ->
+        val id = prefs[PreferencesKeys.SELECTED_RESTAURANT_ID]
+        val name = prefs[PreferencesKeys.SELECTED_RESTAURANT_NAME]
+
+        if (id != null && name != null) {
+            Restaurant(id, name)
+        } else null
+    }
+
 
     suspend fun setFcmToken(token: String) {
         ds.edit { prefs -> prefs[PreferencesKeys.FCM_TOKEN] = token }
@@ -32,8 +40,11 @@ class AppPreferences(
         ds.edit { prefs -> prefs[PreferencesKeys.USER_ID] = userId }
     }
 
-    suspend fun setSelectedRestaurantId(restaurantId: String) {
-        ds.edit { prefs -> prefs[PreferencesKeys.SELECTED_RESTAURANT_ID] = restaurantId }
+    suspend fun setSelectedRestaurant(restaurant: Restaurant) {
+        ds.edit { prefs ->
+            prefs[PreferencesKeys.SELECTED_RESTAURANT_ID] = restaurant.id
+            prefs[PreferencesKeys.SELECTED_RESTAURANT_NAME] = restaurant.name
+        }
     }
 
 

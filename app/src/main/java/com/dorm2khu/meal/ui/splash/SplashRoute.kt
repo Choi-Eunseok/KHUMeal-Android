@@ -24,7 +24,7 @@ fun SplashRoute(
         viewModel.navEvents.collect { ev ->
             when (ev) {
                 SplashNavEvent.ToHome -> {
-                    navController.navigate(Routes.HOME) {
+                    navController.navigate(Routes.MAIN) {
                         popUpTo(Routes.SPLASH) { inclusive = true }
                         launchSingleTop = true
                     }

@@ -10,6 +10,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
+import com.dorm2khu.meal.ui.main.MainContainerRoute
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -25,13 +26,8 @@ fun AppNavGraph() {
         popExitTransition = { fadeOut(tween(500)) }
     ) {
         composable(Routes.SPLASH) { SplashRoute(navController) }
-        composable(Routes.HOME) {
-            // TODO: MainContainer(Home) Route로 교체
-            androidx.compose.foundation.layout.Box(
-                modifier = androidx.compose.ui.Modifier.fillMaxSize()
-            ) {
-                androidx.compose.material3.Text("Home")
-            }
+        composable(Routes.MAIN) {
+            MainContainerRoute()
         }
     }
 }

@@ -1,7 +1,9 @@
 package com.dorm2khu.meal.di
 
 import com.dorm2khu.meal.BuildConfig
-import com.dorm2khu.meal.data.api.ApiService
+import com.dorm2khu.meal.data.api.MealApiService
+import com.dorm2khu.meal.data.api.RestaurantApiService
+import com.dorm2khu.meal.data.api.UserApiService
 import dagger.Module
 import dagger.Provides
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -48,6 +50,11 @@ object NetworkModule {
     }
 
     @Provides @Singleton
-    fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
+    fun provideUserApiService(retrofit: Retrofit): UserApiService = retrofit.create(UserApiService::class.java)
 
+    @Provides @Singleton
+    fun provideRestaurantApiService(retrofit: Retrofit): RestaurantApiService = retrofit.create(RestaurantApiService::class.java)
+
+    @Provides @Singleton
+    fun provideMealApiService(retrofit: Retrofit): MealApiService = retrofit.create(MealApiService::class.java)
 }
