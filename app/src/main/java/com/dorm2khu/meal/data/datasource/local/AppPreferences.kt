@@ -31,6 +31,11 @@ class AppPreferences(
         } else null
     }
 
+    val isImageModeFlow: Flow<Boolean> =
+        ds.data.map { prefs ->
+            prefs[PreferencesKeys.IS_IMAGE_MODE] ?: false
+        }
+
 
     suspend fun setFcmToken(token: String) {
         ds.edit { prefs -> prefs[PreferencesKeys.FCM_TOKEN] = token }
@@ -44,6 +49,12 @@ class AppPreferences(
         ds.edit { prefs ->
             prefs[PreferencesKeys.SELECTED_RESTAURANT_ID] = restaurant.id
             prefs[PreferencesKeys.SELECTED_RESTAURANT_NAME] = restaurant.name
+        }
+    }
+
+    suspend fun setImageMode(isImage: Boolean) {
+        ds.edit { prefs ->
+            prefs[PreferencesKeys.IS_IMAGE_MODE] = isImage
         }
     }
 

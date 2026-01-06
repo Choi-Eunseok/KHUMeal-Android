@@ -1,4 +1,4 @@
-package com.dorm2khu.meal.data.remote.datasource
+package com.dorm2khu.meal.data.datasource.remote
 
 import com.dorm2khu.meal.data.api.RestaurantApiService
 import com.dorm2khu.meal.data.model.dto.RestaurantDto

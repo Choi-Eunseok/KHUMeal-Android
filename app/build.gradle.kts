@@ -101,6 +101,9 @@ dependencies {
 
     // haze
     implementation("dev.chrisbanes.haze:haze:0.7.3")
+
+    // coil
+    implementation("io.coil-kt:coil-compose:2.6.0")
 }
 
 hilt {

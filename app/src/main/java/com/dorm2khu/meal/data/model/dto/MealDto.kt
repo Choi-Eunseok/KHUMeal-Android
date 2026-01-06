@@ -13,8 +13,8 @@ data class DailyMealInfoDto(
 data class MenuInfoDto(
     val menuInfoUuid: String,
     val cornerName: String,
-    val imageUrl: String? = null,
-    val menuItems: List<MenuItemDto> = emptyList()
+    val items: List<MenuItemDto>,
+    val imageUrl: String? = null
 )
 
 @Serializable

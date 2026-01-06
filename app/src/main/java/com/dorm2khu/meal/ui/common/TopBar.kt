@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -44,7 +44,8 @@ fun TopBar(
 
         Text(
             text = title,
-            style = TextStyle(fontSize = 22.sp),
+            fontWeight = FontWeight.Bold,
+            fontSize = 22.sp,
             color = frontColor
         )
     }

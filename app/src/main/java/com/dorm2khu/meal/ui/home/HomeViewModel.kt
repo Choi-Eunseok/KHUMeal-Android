@@ -1,109 +1,114 @@
 package com.dorm2khu.meal.ui.home
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dorm2khu.meal.ui.home.model.MenuUiModel
-import com.dorm2khu.meal.ui.home.model.WeeklyMealUiModel
+import com.dorm2khu.meal.data.datasource.local.AppPreferences
+import com.dorm2khu.meal.data.model.MealContentMode
+import com.dorm2khu.meal.data.repository.MenuRepository
+import com.dorm2khu.meal.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    // TODO: MealRepository 주입 (restaurantId 기준으로 메뉴 로드)
+    private val menuRepository: MenuRepository,
+    private val userRepository: UserRepository,
+    private val appPreferences: AppPreferences
 ) : ViewModel() {
 
-    var uiState = androidx.compose.runtime.mutableStateOf(HomeUiState())
+    var uiState = mutableStateOf(HomeUiState())
         private set
 
-    /**
-     * SideMenu에서 식당 선택이 변경되었을 때 호출
-     * iOS: didSelectRestaurant(_:)
-     */
+    val mealContentMode: StateFlow<MealContentMode> =
+        appPreferences.isImageModeFlow
+            .map { isImage ->
+                if (isImage) MealContentMode.Image else MealContentMode.Text
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = MealContentMode.Text
+            )
+
     fun onRestaurantChanged(
         restaurantId: Int,
         restaurantName: String
     ) {
-        loadWeeklyMeals(
-            restaurantId = restaurantId,
-            restaurantName = restaurantName
-        )
+        loadWeeklyMeals(restaurantId, restaurantName)
     }
 
-    /**
-     * 식당 기준으로 주간 메뉴 로드
-     */
-    private fun loadWeeklyMeals(
-        restaurantId: Int,
-        restaurantName: String
-    ) {
+    private fun loadWeeklyMeals(restaurantId: Int, restaurantName: String) {
         viewModelScope.launch {
             uiState.value = uiState.value.copy(
                 isLoading = true,
+                restaurantId = restaurantId,
                 restaurantName = restaurantName
             )
 
-            // TODO: 실제 API 연동 (restaurantId 사용)
-            delay(600)
+            runCatching {
+                val meals = menuRepository.getThisWeekMenu(restaurantId)
 
-            uiState.value = uiState.value.copy(
-                isLoading = false,
-                weeklyMeals = mockWeeklyMeals(),
-                highlightedUuids = emptySet()
-            )
+                val uuids = meals
+                    .flatMap { it.menuInfos }
+                    .flatMap { it.items }
+                    .map { it.uuid }
+                    .distinct()
+
+                val userId = appPreferences.userIdFlow.first().orEmpty()
+                val highlighted = if (userId.isNotBlank() && uuids.isNotEmpty()) {
+                    userRepository.fetchUserHighlights(userId, uuids)
+                } else emptySet()
+
+                meals to highlighted
+            }.onSuccess { (meals, highlighted) ->
+                uiState.value = uiState.value.copy(
+                    isLoading = false,
+                    weeklyMeals = meals,
+                    highlightedUuids = highlighted
+                )
+            }.onFailure { e ->
+                uiState.value = uiState.value.copy(
+                    isLoading = false,
+                )
+            }
         }
     }
 
-    /**
-     * iOS: syncHighlightStatus(uuid:status:)
-     */
     fun syncHighlightStatus(uuid: String, isSelected: Boolean) {
         val newSet = uiState.value.highlightedUuids.toMutableSet()
         if (isSelected) newSet.add(uuid) else newSet.remove(uuid)
 
-        uiState.value = uiState.value.copy(
-            highlightedUuids = newSet
-        )
+        uiState.value = uiState.value.copy(highlightedUuids = newSet)
 
-        // TODO: 서버 동기화
+        viewModelScope.launch {
+            val userId = appPreferences.userIdFlow.first().orEmpty()
+            if (userId.isBlank()) return@launch
+
+            runCatching {
+                userRepository.updateHighlight(
+                    userId = userId,
+                    menuItemUuid = uuid,
+                    isHighlighted = isSelected
+                )
+            }
+        }
     }
 
-    /**
-     * iOS: scrollToToday()
-     */
+
     fun scrollToTodayRequested(): Int {
-        // TODO: 실제 날짜 계산
-        return 0
-    }
+        val list = uiState.value.weeklyMeals
+        if (list.isEmpty()) return 0
 
-    // -----------------------
-    // Mock data
-    // -----------------------
-
-    private fun mockWeeklyMeals(): List<WeeklyMealUiModel> {
-        return listOf(
-            WeeklyMealUiModel(
-                dateLabel = "월 09.23",
-                menuInfos = listOf(
-                    MenuUiModel("1", "김치찌개"),
-                    MenuUiModel("2", "계란말이")
-                )
-            ),
-            WeeklyMealUiModel(
-                dateLabel = "화 09.24",
-                menuInfos = listOf(
-                    MenuUiModel("3", "불고기"),
-                    MenuUiModel("4", "된장국")
-                )
-            ),
-            WeeklyMealUiModel(
-                dateLabel = "수 09.25",
-                menuInfos = listOf(
-                    MenuUiModel("5", "제육볶음"),
-                    MenuUiModel("6", "미역국")
-                )
-            )
-        )
+        val today = LocalDate.now().toString()
+        val idx = list.indexOfFirst { it.date == today }
+        return if (idx >= 0) idx else 0
     }
 }
