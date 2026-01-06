@@ -21,6 +21,7 @@ import com.dorm2khu.meal.ui.theme.HighlightYellow
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MealMenuItemView(
+    modifier: Modifier = Modifier,
     text: String,
     isHighlighted: Boolean,
     onToggle: (Boolean) -> Unit
@@ -33,7 +34,7 @@ fun MealMenuItemView(
     val bg = if (localHighlighted) HighlightYellow else Color.Transparent
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(4.dp))
             .background(bg)
             .combinedClickable(

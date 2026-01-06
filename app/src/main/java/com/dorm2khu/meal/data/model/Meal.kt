@@ -1,5 +1,7 @@
 package com.dorm2khu.meal.data.model
 
+import com.dorm2khu.meal.BuildConfig
+
 data class DailyMealInfo(
     val restaurantName: String,
     val date: String,
@@ -12,8 +14,8 @@ data class MenuInfo(
     val items: List<MenuItem>,
     val imageUrl: String?
 ) {
-    fun fullImageUrl(baseUrl: String): String? =
-        imageUrl?.let { baseUrl.trimEnd('/') + it }
+    fun fullImageUrl(): String? =
+        imageUrl?.let { BuildConfig.BASE_URL.trimEnd('/') + it }
 }
 
 data class MenuItem(

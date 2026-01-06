@@ -1,5 +1,6 @@
 package com.dorm2khu.meal.ui.home.components
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,23 +27,13 @@ fun MealImageView(
 
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
     ) {
-        val painter = rememberAsyncImagePainter(model = imageUrl)
-        val size = painter.intrinsicSize
-        val ratio =
-            if (size.width > 0f && size.height > 0f) size.width / size.height
-            else null
-
         SubcomposeAsyncImage(
             model = imageUrl,
             contentDescription = null,
             modifier = Modifier
-                .fillMaxWidth()
-                .then(
-                    if (ratio != null) Modifier.aspectRatio(ratio) else Modifier
-                ),
-            contentScale = ContentScale.Crop
+                .fillMaxWidth(),
+            contentScale = ContentScale.FillWidth
         ) {
             SubcomposeAsyncImageContent()
         }

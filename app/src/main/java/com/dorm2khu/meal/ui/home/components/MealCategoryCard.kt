@@ -17,13 +17,14 @@ import com.dorm2khu.meal.data.model.MenuInfo
 
 @Composable
 fun MealCategoryCard(
+    modifier: Modifier = Modifier,
     menuInfo: MenuInfo,
     mode: MealContentMode,
     highlightedUuids: Set<String>,
     onHighlightChanged: (uuid: String, isSelected: Boolean) -> Unit
 ) {
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier,
         color = Color.White,
         shape = androidx.compose.foundation.shape.RoundedCornerShape(20.dp),
         shadowElevation = 6.dp
@@ -62,6 +63,7 @@ fun MealCategoryCard(
                     ) {
                         menuInfo.items.forEach { item ->
                             MealMenuItemView(
+                                modifier = Modifier,
                                 text = item.name,
                                 isHighlighted = highlightedUuids.contains(item.uuid),
                                 onToggle = { selected ->
@@ -74,7 +76,7 @@ fun MealCategoryCard(
 
                 MealContentMode.Image -> {
                     MealImageView(
-                        imageUrl = menuInfo.imageUrl,
+                        imageUrl = menuInfo.fullImageUrl(),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 4.dp, start = 24.dp, end = 24.dp, bottom = 12.dp)

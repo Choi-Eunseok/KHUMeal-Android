@@ -9,8 +9,8 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.fillMaxSize
 import com.dorm2khu.meal.ui.main.MainContainerRoute
+import com.dorm2khu.meal.ui.settings.SettingsRoute
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -26,8 +26,7 @@ fun AppNavGraph() {
         popExitTransition = { fadeOut(tween(500)) }
     ) {
         composable(Routes.SPLASH) { SplashRoute(navController) }
-        composable(Routes.MAIN) {
-            MainContainerRoute()
-        }
+        composable(Routes.MAIN) { MainContainerRoute(navController) }
+        composable(Routes.SETTINGS) { SettingsRoute(navController) }
     }
 }

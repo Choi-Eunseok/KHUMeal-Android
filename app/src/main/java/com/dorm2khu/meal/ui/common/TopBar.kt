@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.Icon
@@ -38,6 +39,7 @@ fun TopBar(
             contentDescription = "",
             tint = Color.White,
             modifier = Modifier
+                .size(48.dp)
                 .padding(end = 16.dp)
                 .clickable { onMenuTapped() }
         )

@@ -6,9 +6,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import com.dorm2khu.meal.ui.home.HomeRoute
 import com.dorm2khu.meal.ui.home.HomeViewModel
+import com.dorm2khu.meal.ui.navigation.AppNavGraph
+import com.dorm2khu.meal.ui.navigation.Routes
 import com.dorm2khu.meal.ui.sidemenu.SideMenu
 import com.dorm2khu.meal.ui.sidemenu.SideMenuNavEvent
 import com.dorm2khu.meal.ui.sidemenu.SideMenuViewModel
@@ -17,6 +21,7 @@ import dev.chrisbanes.haze.haze
 
 @Composable
 fun MainContainerRoute(
+    navController: NavController,
     sideMenuViewModel: SideMenuViewModel = hiltViewModel(),
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -38,7 +43,7 @@ fun MainContainerRoute(
                     )
                 }
                 SideMenuNavEvent.ToSettings -> {
-                    // settings navigation
+                    navController.navigate(Routes.SETTINGS)
                 }
             }
         }

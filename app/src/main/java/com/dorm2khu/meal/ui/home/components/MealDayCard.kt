@@ -95,6 +95,7 @@ fun MealDayCard(
             ) {
                 meal.menuInfos.forEach { menuInfo ->
                     MealCategoryCard(
+                        modifier = Modifier,
                         menuInfo = menuInfo,
                         mode = mode,
                         highlightedUuids = highlightedUuids,
