@@ -4,10 +4,8 @@ import com.dorm2khu.meal.data.model.dto.UserHighlightRequestDto
 import com.dorm2khu.meal.data.model.dto.UserHighlightResponseDto
 import com.dorm2khu.meal.data.model.dto.UserSyncRequestDto
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
-import retrofit2.http.Query
 
 interface UserApiService {
 
@@ -21,9 +19,9 @@ interface UserApiService {
         @Body body: UserHighlightRequestDto
     )
 
-    @GET("/api/v1/users/{userId}/highlights")
+    @POST("/api/v2/users/{userId}/highlights")
     suspend fun fetchUserHighlights(
         @Path("userId") userId: String,
-        @Query("menuUuids") menuUuids: String
+        @Body menuUuids: List<String>
     ): UserHighlightResponseDto
 }

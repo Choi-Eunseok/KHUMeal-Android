@@ -13,10 +13,7 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun fetchUserHighlights(userId: String, uuids: List<String>): Set<String> {
         if (uuids.isEmpty()) return emptySet()
 
-        // Swift: uuids.joined(separator: ",")
-        val csv = uuids.joinToString(",")
-
-        val resp = remote.fetchUserHighlights(userId, csv)
+        val resp = remote.fetchUserHighlights(userId, uuids)
         return resp.highlightedUuids.toSet()
     }
 

@@ -13,10 +13,10 @@ class UserRemoteDataSource @Inject constructor(
         api.syncUser(body)
     }
 
-    suspend fun fetchUserHighlights(userId: String, menuUuidsCsv: String): UserHighlightResponseDto {
+    suspend fun fetchUserHighlights(userId: String, menuUuids: List<String>): UserHighlightResponseDto {
         return api.fetchUserHighlights(
             userId = userId,
-            menuUuids = menuUuidsCsv
+            menuUuids = menuUuids
         )
     }
 
